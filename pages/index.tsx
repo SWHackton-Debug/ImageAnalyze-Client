@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Main from "../components/Main";
 
 export default function Home() {
   const [state, setState] = useState<string>();
@@ -60,9 +61,5 @@ export default function Home() {
       });
   }, [state]);
 
-  return (
-    <>
-      <button onClick={openTextFile}>이미지 업로드</button>
-    </>
-  );
+  return <Main />;
 }
