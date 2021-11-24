@@ -6,12 +6,10 @@ export default function Home() {
   const [state, setState] = useState<string>();
 
   function openTextFile() {
-    var input = document.createElement("input");
-
+    const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
     input.id = "uploadInput";
-
     input.click();
     input.onchange = function (event: any) {
       processFile(event.target.files[0]);
@@ -19,8 +17,7 @@ export default function Home() {
   }
 
   function processFile(file: any) {
-    var reader = new FileReader();
-
+    const reader = new FileReader();
     reader.onload = function () {
       var result: any = reader.result;
       setState(result);
