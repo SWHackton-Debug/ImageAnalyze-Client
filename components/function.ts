@@ -2,6 +2,7 @@ import axios, { AxiosPromise } from "axios";
 
 interface openTextFileReturn {
   file: string;
+  preview: string;
 }
 
 export const openTextFile = (): Promise<openTextFileReturn> =>
@@ -13,9 +14,12 @@ export const openTextFile = (): Promise<openTextFileReturn> =>
     input.click();
     input.onchange = function (event: Event) {
       const target = event.target as HTMLInputElement;
-      processFile(target.files![0]).then((res) => {
-        resolve({
-          file: res.result,
+      getFileData(target.files![0]).then((res_first) => {
+        processFile(target.files![0]).then((res) => {
+          resolve({
+            file: res.result,
+            preview: res_first.preview,
+          });
         });
       });
     };
@@ -64,3 +68,20 @@ export const getImgData = (file: any): AxiosPromise<any> => {
     data: JSON.stringify(body),
   });
 };
+
+interface returnValue {
+  file: File;
+  preview: string;
+}
+
+export const getFileData = (file: File): Promise<returnValue> =>
+  new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      resolve({
+        file: file,
+        preview: reader.result!.toString(),
+      });
+    };
+    file && reader.readAsDataURL(file);
+  });

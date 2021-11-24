@@ -11,6 +11,7 @@ const Main: FC = () => {
   const [aiSpeack, setAiSpeack] =
     useState<string>("분석할 사진을 선택하시겠어요?");
   const [isMicOn, setIsMicOn] = useState<Boolean>(false);
+  const [previewUrl, setPreviewUrl] = useState<string>();
   const { transcript, resetTranscript } = useSpeechRecognition();
 
   const listen = () => {
@@ -39,14 +40,17 @@ const Main: FC = () => {
       if (transcript.includes("업로드")) {
         speachText("사진을 선택해주세요");
         openTextFile().then((res) => {
+          setPreviewUrl(res.preview);
           getImgData(res.file).then((res) => {
             const imgData: any[] =
               res.data.responses[0].localizedObjectAnnotations;
             let objCollectText = "";
             imgData.forEach(({ name }, index) => {
-              objCollectText += " " + name;
               if (imgData.length - 1 === index) {
-                setAiSpeack(`이 사진 속엔 ${objCollectText} 등이 있네요`);
+                objCollectText += name + " ";
+                setAiSpeack(`이 사진 속엔 ${objCollectText} 등이 있습니다`);
+              } else {
+                objCollectText += name + ",";
               }
               console.log(name);
             });
@@ -76,6 +80,7 @@ const Main: FC = () => {
           {isMicOn ? <Spiner size={50} /> : <MicIcon />}
         </button>
       </div>
+      {previewUrl && <img className={s.preview} src={previewUrl} />}
     </div>
   );
 };

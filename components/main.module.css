@@ -56,3 +56,9 @@
   z-index: 0;
   transform: translate(-15px, -10px);
 }
+
+.preview {
+  margin-top: 80px;
+  width: 350px;
+  box-shadow: 0px 4px 10px 10px rgba(116, 127, 149, 0.25);
+}
