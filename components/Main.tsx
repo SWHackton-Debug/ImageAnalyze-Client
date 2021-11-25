@@ -6,6 +6,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import Spiner from "./Spiner";
 import { getImgData, openTextFile } from "./function";
+import axios from "axios";
 
 const Main: FC = () => {
   const [aiSpeack, setAiSpeack] =
@@ -46,13 +47,23 @@ const Main: FC = () => {
               res.data.responses[0].localizedObjectAnnotations;
             let objCollectText = "";
             imgData.forEach(({ name }, index) => {
-              if (imgData.length - 1 === index) {
-                objCollectText += name + " ";
-                setAiSpeack(`이 사진 속엔 ${objCollectText} 등이 있습니다`);
-              } else {
-                objCollectText += name + ",";
-              }
-              console.log(name);
+              axios({
+                method: "post",
+                url: "http://118.67.129.142:3000/translate",
+                data: {
+                  source: "en",
+                  target: "ko",
+                  text: name,
+                },
+              }).then((res) => {
+                const text = res.data.message.result.translatedText;
+                if (imgData.length - 1 === index) {
+                  objCollectText += text + " ";
+                  setAiSpeack(`이 사진 속엔 ${objCollectText} 등이 있습니다`);
+                } else {
+                  objCollectText += text + ", ";
+                }
+              });
             });
           });
         });
