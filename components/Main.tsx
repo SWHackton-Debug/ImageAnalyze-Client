@@ -47,23 +47,29 @@ const Main: FC = () => {
               res.data.responses[0].localizedObjectAnnotations;
             let objCollectText = "";
             imgData.forEach(({ name }, index) => {
-              axios({
-                method: "post",
-                url: "http://118.67.129.142:3000/translate",
-                data: {
-                  source: "en",
-                  target: "ko",
-                  text: name,
-                },
-              }).then((res) => {
-                const text = res.data.message.result.translatedText;
-                if (imgData.length - 1 === index) {
-                  objCollectText += text + " ";
-                  setAiSpeack(`이 사진 속엔 ${objCollectText} 등이 있습니다`);
-                } else {
-                  objCollectText += text + ", ";
-                }
-              });
+              setTimeout(() => {
+                axios({
+                  method: "post",
+                  url: "http://118.67.129.142:3000/translate",
+                  data: {
+                    source: "en",
+                    target: "ko",
+                    text: name,
+                  },
+                }).then((res) => {
+                  const text = res.data.message.result.translatedText;
+                  if (imgData.length - 1 === index) {
+                    setTimeout(() => {
+                      objCollectText += text + " ";
+                      setAiSpeack(
+                        `이 사진 속엔 ${objCollectText} 등이 있습니다`
+                      );
+                    }, 100);
+                  } else {
+                    objCollectText += text + ", ";
+                  }
+                });
+              }, 100);
             });
           });
         });
@@ -80,14 +86,14 @@ const Main: FC = () => {
   return (
     <div className={s.wrapper}>
       <h1 className={s.ai_said}>{aiSpeack}</h1>
-      <div className={s.btn_wrap}>
+      <div className={s.btn_wrap} onClick={isMicOn ? stopListen : listen}>
         {!isMicOn && (
           <>
             <div className={s.right_background_circle} />
             <div className={s.left_background_circle} />
           </>
         )}
-        <button className={s.mic_btn} onClick={isMicOn ? stopListen : listen}>
+        <button className={s.mic_btn}>
           {isMicOn ? <Spiner size={50} /> : <MicIcon />}
         </button>
       </div>
