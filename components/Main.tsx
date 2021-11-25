@@ -46,6 +46,12 @@ const Main: FC = () => {
             const imgData: any[] =
               res.data.responses[0].localizedObjectAnnotations;
             let objCollectText = "";
+            if (imgData == undefined) {
+              setAiSpeack(
+                `이 사진 속에 검출된 것이 없습니다`
+              );
+              throw '';
+            }
             imgData.forEach(({ name }, index) => {
               setTimeout(() => {
                 axios({
